@@ -1,4 +1,4 @@
-// import cookie from 'react-cookies'
+import cookie from 'react-cookies'
 import superagent from 'superagent';
 
 let API = process.env.REACT_APP_API;
@@ -9,9 +9,11 @@ export const userPostFetch = userInfo => {
       .post(`${API}/signup`)
       .send(userInfo)
       .then(res => {
-        // cookie.save('token', res.headers['Token'])
-        console.log(res.headers.Token);
-        dispatch(loginUser(res.data));
+        cookie.save('token', res.headers.token);
+        dispatch(loginUser({
+          ...res.body,
+          token: res.headers.token
+        }));
       })
       .catch(err => console.error(err));
   };
